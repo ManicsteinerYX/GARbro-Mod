@@ -57,7 +57,7 @@ namespace GameRes.Formats.Cri
             backend.Position = 4;
             var lzss = new LzssStream (backend);
             var input = new SeekableStream (lzss);
-            try
+            /*try
             {
                 var base_name = Path.GetFileNameWithoutExtension (file.Name);
                 using (var spc = new XtxIndexBuilder (input, base_name))
@@ -73,7 +73,14 @@ namespace GameRes.Formats.Cri
             {
                 input.Dispose();
                 throw;
-            }
+            }*/
+            var dir = new List<Entry> ();
+            var entry = Create<PackedEntry>(Path.GetFileNameWithoutExtension(file.Name));
+            entry.Offset = 0;
+            entry.Size = (uint)input.Length;
+            dir.Add (entry);
+            return new SpcArchive(file, this, dir, input);
+            //return ret;
         }
 
         public override Stream OpenEntry (ArcFile arc, Entry entry)
